@@ -19,15 +19,24 @@
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.mapapp"
     },
     "web": {
       "output": "static",
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
+      [
+        "expo-location", // for expo location
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow App to access your location"
+        }
+      ],
+
       "expo-router",
       [
+        
         "expo-splash-screen",
         {
           "image": "./assets/images/splash-icon.png",
@@ -38,11 +47,19 @@
             "backgroundColor": "#000000"
           }
         }
-      ]
+      ],
+      "expo-font"
     ],
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "29683843-059a-44e0-987d-c05e25fbbaa9"
+      }
     }
   }
 }
+
