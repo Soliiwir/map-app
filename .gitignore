@@ -45,7 +45,7 @@ app-example
 
 # Terraform ignore rules
 .terraform/
-*.tfstate
-*.tfstate.backup
 .terraform.lock.hcl
-crash.log
+terraform.tfstate
+terraform.tfstate.backup
+*.tfvars
