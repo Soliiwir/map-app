@@ -32,7 +32,7 @@ jobs:
       - name: Authenticate with Expo
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
-        run: eas whoami --token $EXPO_TOKEN
+        run: eas whoami 
 
 
       # 6. Build Android
