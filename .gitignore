@@ -1,6 +1,4 @@
-# Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
-
-# dependencies
+# Node dependencies
 node_modules/
 
 # Expo
@@ -21,7 +19,7 @@ expo-env.d.ts
 # Metro
 .metro-health-check*
 
-# debug
+# Debug logs
 npm-debug.*
 yarn-debug.*
 yarn-error.*
@@ -30,22 +28,24 @@ yarn-error.*
 .DS_Store
 *.pem
 
-# local env files
+# Local env files
 .env*.local
 
-# typescript
+# TypeScript build info
 *.tsbuildinfo
 
+# Example folder
 app-example
 
-
-# @end expo-cli.terraform/ 
+# Virtual environments
 .venv/
-*.exe 
 
-# Terraform ignore rules
+# Terraform files to ignore
 .terraform/
 .terraform.lock.hcl
 terraform.tfstate
 terraform.tfstate.backup
 *.tfvars
+
+# Optional: ignore all exe files (careful)
+# *.exe
