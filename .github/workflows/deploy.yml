@@ -42,7 +42,8 @@ jobs:
       - name: Authenticate with Expo
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
-        run: eas whoami
+        run: eas whoami --token $EXPO_TOKEN
+
 
       - name: Deploy to Expo Hosting
         env:
