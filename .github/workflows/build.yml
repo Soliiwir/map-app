@@ -1,4 +1,4 @@
-name: Test Application
+name: Build Application
 
 on:
   #runs every time new code is pushed to the "main" branch.
@@ -10,6 +10,7 @@ jobs:
   build_android:
     name: Build Android App with Expo EAS
     runs-on: ubuntu-latest
+
 
     steps:
       # 1. Checkout repository
