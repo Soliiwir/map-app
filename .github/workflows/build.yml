@@ -1,10 +1,11 @@
 name: Build Application
 
 on:
-  push:
-    branches: 
-      - main
-
+  #runs every time new code is pushed to the "main" branch.
+   workflow_run:
+    workflows: ["Test Application"]
+    types:
+      - completed
 jobs:
   build_android:
     name: Build Android App with Expo EAS

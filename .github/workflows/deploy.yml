@@ -1,5 +1,6 @@
 name: Deploy Project
 on:
+  # Run this workflow every time something is pushed to the main branch
   push:
     branches:
       - main
@@ -9,15 +10,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+     # 1. Checkout the project code from the main branch
       - name: Checkout code
         uses: actions/checkout@v5
         with:
           fetch-depth: 0
           ref: main
 
+        # Ensure Git is set up correctly in the container
       - name: Mark repository as safe
         run: git config --global --add safe.directory /__w/Campus-Navigation-App/Campus-Navigation-App
 
+        #ensure git is configured
       - name: Configure Git
         run: |
           git config --global user.name "GitHub Actions"
@@ -30,10 +34,11 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
-
+        #istall dependencies
       - name: Install EAS CLI
         run: npm install -g eas-cli
 
+      #aunthenticate with expo
       - name: Authenticate with Expo
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}

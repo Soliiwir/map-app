@@ -1,10 +1,11 @@
 name: Test Application
 
 on:
+# Run this workflow whenever a pull request
   pull_request:
     branches:
       - main
-
+  # run when code is pushed to "main" branch
   push:
     branches: 
       - main

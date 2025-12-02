@@ -136,116 +136,106 @@ const MapScreen = () => {
   if (!location) return <View style={styles.center}><Text>Fetching location...</Text></View>;
 
   return (
-  <View style={styles.container}>
-    {/* Search Bar */}
-    <SearchBar
-      currentLocation={location}
-      setRouteCoords={setRouteCoords}
-      setDestinationCoords={handleSearchedLocation}
-    />
-
-    {/* Map */}
-    <MapboxGL.MapView style={styles.map}>
-      <MapboxGL.Camera
-        ref={mapCamera}
-        zoomLevel={16}
-        centerCoordinate={[location.coords.longitude, location.coords.latitude]}
-        animationMode="flyTo"
-        animationDuration={2000}
+    <View style={styles.container}>
+      <SearchBar
+        currentLocation={location}
+        setRouteCoords={setRouteCoords}
+        setDestinationCoords={handleSearchedLocation}
       />
 
-      {/* CURRENT LOCATION (Blue dot pin) */}
-      <MapboxGL.PointAnnotation
-        id="current"
-        coordinate={[location.coords.longitude, location.coords.latitude]}
-      >
-        <View style={styles.currentMarker}>
-          <FontAwesome name="map-marker" size={32} color="#007AFF" />
-        </View>
-      </MapboxGL.PointAnnotation>
+      <MapboxGL.MapView style={styles.map}>
+        <MapboxGL.Camera
+          ref={mapCamera}
+          zoomLevel={16}
+          centerCoordinate={[location.coords.longitude, location.coords.latitude]}
+          animationMode="flyTo"
+          animationDuration={2000}
+        />
 
-      {/* DESTINATION (Checkered Flag Theme) */}
-      {destination && (
-        <MapboxGL.PointAnnotation id="dest" coordinate={destination}>
-          <View style={styles.destMarker}>
-            <FontAwesome5 name="flag-checkered" size={32} color="#28A745" />
-          </View>
+        {/* Current location */}
+        <MapboxGL.PointAnnotation id="current" coordinate={[location.coords.longitude, location.coords.latitude]}>
+          <View style={styles.currentMarker}><Text>📍</Text></View>
         </MapboxGL.PointAnnotation>
-      )}
 
-      {/* ROUTE LINE */}
-      {routeCoords.length > 0 && (
-        <MapboxGL.ShapeSource
-          id="routeSource"
-          shape={{
-            type: "Feature",
-            properties: {},      // REQUIRED so TypeScript stops complaining
-            geometry: {
-              type: "LineString",
-              coordinates: routeCoords,
-            },
-          }}
-        >
-          <MapboxGL.LineLayer
-            id="routeLine"
-            style={{
-              lineColor: "#0047AB",
-              lineWidth: 5,
-              lineJoin: "round",
-              lineCap: "round",
+        {/* Destination */}
+        {destination && (
+          <MapboxGL.PointAnnotation id="dest" coordinate={destination}>
+            <View style={styles.destMarker}><Text>🏁</Text></View>
+          </MapboxGL.PointAnnotation>
+        )}
+
+        {/* Route */}
+        {routeCoords.length > 0 && (
+          <MapboxGL.ShapeSource
+            id="routeSource"
+            shape={{
+              type: "Feature",
+              properties: {},
+              geometry: {
+                type: "LineString",
+                coordinates: routeCoords
+              }
             }}
-          />
-        </MapboxGL.ShapeSource>
+          >
+            <MapboxGL.LineLayer
+              id="routeLine"
+              style={{
+                lineColor: "blue",
+                lineWidth: 4,
+                lineJoin: "round",
+                lineCap: "round"
+              }}
+            />
+          </MapboxGL.ShapeSource>
+        )}
+
+
+        {/* Campus buildings */}
+        {campusBuildings.map((b) => (
+          <MapboxGL.PointAnnotation
+            key={b.name}
+            id={b.name}
+            coordinate={[b.longitude, b.latitude]}
+            onSelected={() => onMarkerPress(b)}
+          >
+            <View style={styles.buildingMarker}>
+              <Fontisto name={b.iconName as any} size={20} color="black" />
+            </View>
+          </MapboxGL.PointAnnotation>
+        ))}
+      </MapboxGL.MapView>
+
+      {showNavButtons && (
+        <View style={styles.navButtons}>
+          <TouchableOpacity style={styles.navButton} onPress={startInAppNavigation}>
+            <Text style={styles.navText}>Start In-App Navigation</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.navButton} onPress={startExternalNavigation}>
+            <Text style={styles.navText}>Open in Google Maps</Text>
+          </TouchableOpacity>
+        </View>
       )}
 
-      {/* CAMPUS BUILDINGS */}
-      {campusBuildings.map((b) => (
-        <MapboxGL.PointAnnotation
-          key={b.name}
-          id={b.name}
-          coordinate={[b.longitude, b.latitude]}
-          onSelected={() => onMarkerPress(b)}
-        >
-          <View style={styles.buildingMarker}>
-            <FontAwesome5 name="university" size={20} color="#6A1B9A" />
+      {/* Modal */}
+      <Modal visible={modalVisible} animationType="none" transparent>
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <TouchableOpacity onPress={() => setModalVisible(false)} style={styles.closeButton}>
+              <Text style={styles.closeButtonText}>close</Text>
+            </TouchableOpacity>
+
+            {selectedBuilding && (
+              <>
+                <Text style={styles.modalTitle}>{selectedBuilding.name}</Text>
+                <Text style={styles.modalDescription}>{selectedBuilding.description}</Text>
+              </>
+            )}
           </View>
-        </MapboxGL.PointAnnotation>
-      ))}
-    </MapboxGL.MapView>
-
-    {/* NAVIGATION BUTTONS */}
-    {showNavButtons && (
-      <View style={styles.navButtons}>
-        <TouchableOpacity style={styles.navButton} onPress={startInAppNavigation}>
-          <Text style={styles.navText}>Start In-App Navigation</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.navButton} onPress={startExternalNavigation}>
-          <Text style={styles.navText}>Open in Google Maps</Text>
-        </TouchableOpacity>
-      </View>
-    )}
-
-    {/* BUILDING MODAL */}
-    <Modal visible={modalVisible} animationType="slide" transparent>
-      <View style={styles.modalContainer}>
-        <View style={styles.modalContent}>
-          <TouchableOpacity onPress={() => setModalVisible(false)} style={styles.closeButton}>
-            <Text style={styles.closeButtonText}>Close</Text>
-          </TouchableOpacity>
-
-          {selectedBuilding && (
-            <>
-              <Text style={styles.modalTitle}>{selectedBuilding.name}</Text>
-              <Text style={styles.modalDescription}>{selectedBuilding.description}</Text>
-            </>
-          )}
         </View>
-      </View>
-    </Modal>
-  </View>
-);
-
+      </Modal>
+    </View>
+  );
+};
 
 export default MapScreen;
 
