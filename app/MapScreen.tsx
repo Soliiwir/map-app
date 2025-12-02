@@ -1,12 +1,40 @@
+
+
+import { Fontisto } from '@expo/vector-icons';
 import MapboxGL from "@rnmapbox/maps";
 import * as Location from "expo-location";
 import { addDoc, collection } from "firebase/firestore";
 import React, { useEffect, useRef, useState } from "react";
-import { Linking, Platform, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Dimensions, Linking, Modal, Platform, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { db } from "./firebaseConfig";
 import SearchBar from "./SearchBar";
 
 MapboxGL.setAccessToken("pk.eyJ1Ijoic29saWl3aXIiLCJhIjoiY21pbWlyd3I1MWk1NDNrcHdsMGdmOGJsOSJ9.GswElTdqTx40EhCSmqt0Dg");
+
+type Building = {
+  name: string;
+  latitude: number;
+  longitude: number;
+  iconName: string;
+  description: string;
+};
+
+const campusBuildings: Building[] = [
+  {
+    name: "Scarborough Library",
+    latitude: 39.432961,
+    longitude: -77.804428,
+    iconName: "map-marker",
+    description: "The Scarborough library holds much more than books...",
+  },
+  {
+    name: "Snyder Hall",
+    latitude: 39.432398,
+    longitude: -77.804750,
+    iconName: "map-marker",
+    description: "Snyder Hall is home to the Department of Computer Science...",
+  },
+];
 
 const MapScreen = () => {
   const [location, setLocation] = useState<Location.LocationObject | null>(null);
@@ -15,7 +43,10 @@ const MapScreen = () => {
   const [showNavButtons, setShowNavButtons] = useState(false);
   const mapCamera = useRef<MapboxGL.Camera>(null);
 
-  // Fetch current location & save to Firebase
+  // Modal for building details
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedBuilding, setSelectedBuilding] = useState<Building | null>(null);
+
   const fetchAndSaveLocation = async () => {
     const { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== "granted") return;
@@ -32,44 +63,45 @@ const MapScreen = () => {
 
   useEffect(() => {
     fetchAndSaveLocation();
+    uploadBuildingsToFirebase(); // optional: only run once
   }, []);
 
-  // Handle selecting a searched location
+  // Upload buildings to Firebase (optional, only run once)
+  const uploadBuildingsToFirebase = async () => {
+    try {
+      for (let building of campusBuildings) {
+        await addDoc(collection(db, "buildings"), building);
+      }
+      console.log("Buildings uploaded to Firebase!");
+    } catch (err) {
+      console.log("Error uploading buildings:", err);
+    }
+  };
+
   const handleSearchedLocation = async (coords: { lat: number; lng: number }) => {
     const dest: [number, number] = [coords.lng, coords.lat];
     setDestination(dest);
     mapCamera.current?.flyTo(dest, 1000);
-
     setShowNavButtons(true);
-
-    // Save searched location
-    await addDoc(collection(db, "locations"), {
-      latitude: coords.lat,
-      longitude: coords.lng,
-      timestamp: new Date(),
-    });
 
     if (location) {
       fetchRoute([location.coords.longitude, location.coords.latitude], dest);
     }
   };
 
-  // Fetch route from Mapbox Directions API
   const fetchRoute = async (origin: [number, number], dest: [number, number]) => {
     const url = `https://api.mapbox.com/directions/v5/mapbox/driving/${origin[0]},${origin[1]};${dest[0]},${dest[1]}?geometries=geojson&access_token=YOUR_MAPBOX_TOKEN`;
     try {
       const res = await fetch(url);
       const data = await res.json();
       if (data.routes && data.routes.length > 0) {
-        const coords = data.routes[0].geometry.coordinates;
-        setRouteCoords(coords);
+        setRouteCoords(data.routes[0].geometry.coordinates);
       }
     } catch (err) {
       console.log("Error fetching route:", err);
     }
   };
 
-  // In-app navigation animation
   const startInAppNavigation = () => {
     if (!routeCoords.length) return;
 
@@ -84,84 +116,136 @@ const MapScreen = () => {
     }, 500);
   };
 
-  // Open Google Maps / Apple Maps
   const startExternalNavigation = () => {
     if (!location || !destination) return;
 
     const origin = `${location.coords.latitude},${location.coords.longitude}`;
     const dest = `${destination[1]},${destination[0]}`;
-
     const url =
       Platform.OS === "ios"
         ? `http://maps.apple.com/?saddr=${origin}&daddr=${dest}`
         : `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${dest}&travelmode=driving`;
-
     Linking.openURL(url);
+  };
+
+  const onMarkerPress = (building: Building) => {
+    setSelectedBuilding(building);
+    setModalVisible(true);
   };
 
   if (!location) return <View style={styles.center}><Text>Fetching location...</Text></View>;
 
   return (
-    <View style={styles.container}>
-      <SearchBar
-        currentLocation={location}
-        setRouteCoords={setRouteCoords}
-        setDestinationCoords={(coords) => handleSearchedLocation(coords)}
+  <View style={styles.container}>
+    {/* Search Bar */}
+    <SearchBar
+      currentLocation={location}
+      setRouteCoords={setRouteCoords}
+      setDestinationCoords={handleSearchedLocation}
+    />
+
+    {/* Map */}
+    <MapboxGL.MapView style={styles.map}>
+      <MapboxGL.Camera
+        ref={mapCamera}
+        zoomLevel={16}
+        centerCoordinate={[location.coords.longitude, location.coords.latitude]}
+        animationMode="flyTo"
+        animationDuration={2000}
       />
 
-      <MapboxGL.MapView style={styles.map}>
-        <MapboxGL.Camera
-          ref={mapCamera}
-          zoomLevel={16}
-          centerCoordinate={[location.coords.longitude, location.coords.latitude]}
-          animationMode="flyTo"
-          animationDuration={2000}
-        />
-
-        {/* Current location marker */}
-        <MapboxGL.PointAnnotation id="current" coordinate={[location.coords.longitude, location.coords.latitude]}>
-          <View style={styles.currentMarker}><Text>📍</Text></View>
-        </MapboxGL.PointAnnotation>
-
-        {/* Destination marker */}
-        {destination && (
-          <MapboxGL.PointAnnotation id="dest" coordinate={destination}>
-            <View style={styles.destMarker}><Text>🏁</Text></View>
-          </MapboxGL.PointAnnotation>
-        )}
-
-        {/* Route line */}
-        {routeCoords.length > 0 && (
-          <MapboxGL.ShapeSource
-            id="routeSource"
-            shape={{
-              type: "Feature",
-              geometry: { type: "LineString", coordinates: routeCoords },
-              properties: {},
-            }}
-          >
-            <MapboxGL.LineLayer
-              id="routeLine"
-              style={{ lineWidth: 4, lineJoin: "round", lineColor: "blue" }}
-            />
-          </MapboxGL.ShapeSource>
-        )}
-      </MapboxGL.MapView>
-
-      {/* Navigation buttons */}
-      {showNavButtons && (
-        <View style={styles.navButtons}>
-          <TouchableOpacity style={styles.navButton} onPress={startInAppNavigation}>
-            <Text style={styles.navText}>Start In-App Navigation</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.navButton} onPress={startExternalNavigation}>
-            <Text style={styles.navText}>Open in Google Maps</Text>
-          </TouchableOpacity>
+      {/* CURRENT LOCATION (Blue dot pin) */}
+      <MapboxGL.PointAnnotation
+        id="current"
+        coordinate={[location.coords.longitude, location.coords.latitude]}
+      >
+        <View style={styles.currentMarker}>
+          <FontAwesome name="map-marker" size={32} color="#007AFF" />
         </View>
+      </MapboxGL.PointAnnotation>
+
+      {/* DESTINATION (Checkered Flag Theme) */}
+      {destination && (
+        <MapboxGL.PointAnnotation id="dest" coordinate={destination}>
+          <View style={styles.destMarker}>
+            <FontAwesome5 name="flag-checkered" size={32} color="#28A745" />
+          </View>
+        </MapboxGL.PointAnnotation>
       )}
-    </View>
-  );
-};
+
+      {/* ROUTE LINE */}
+      {routeCoords.length > 0 && (
+        <MapboxGL.ShapeSource
+          id="routeSource"
+          shape={{
+            type: "Feature",
+            properties: {},      // REQUIRED so TypeScript stops complaining
+            geometry: {
+              type: "LineString",
+              coordinates: routeCoords,
+            },
+          }}
+        >
+          <MapboxGL.LineLayer
+            id="routeLine"
+            style={{
+              lineColor: "#0047AB",
+              lineWidth: 5,
+              lineJoin: "round",
+              lineCap: "round",
+            }}
+          />
+        </MapboxGL.ShapeSource>
+      )}
+
+      {/* CAMPUS BUILDINGS */}
+      {campusBuildings.map((b) => (
+        <MapboxGL.PointAnnotation
+          key={b.name}
+          id={b.name}
+          coordinate={[b.longitude, b.latitude]}
+          onSelected={() => onMarkerPress(b)}
+        >
+          <View style={styles.buildingMarker}>
+            <FontAwesome5 name="university" size={20} color="#6A1B9A" />
+          </View>
+        </MapboxGL.PointAnnotation>
+      ))}
+    </MapboxGL.MapView>
+
+    {/* NAVIGATION BUTTONS */}
+    {showNavButtons && (
+      <View style={styles.navButtons}>
+        <TouchableOpacity style={styles.navButton} onPress={startInAppNavigation}>
+          <Text style={styles.navText}>Start In-App Navigation</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.navButton} onPress={startExternalNavigation}>
+          <Text style={styles.navText}>Open in Google Maps</Text>
+        </TouchableOpacity>
+      </View>
+    )}
+
+    {/* BUILDING MODAL */}
+    <Modal visible={modalVisible} animationType="slide" transparent>
+      <View style={styles.modalContainer}>
+        <View style={styles.modalContent}>
+          <TouchableOpacity onPress={() => setModalVisible(false)} style={styles.closeButton}>
+            <Text style={styles.closeButtonText}>Close</Text>
+          </TouchableOpacity>
+
+          {selectedBuilding && (
+            <>
+              <Text style={styles.modalTitle}>{selectedBuilding.name}</Text>
+              <Text style={styles.modalDescription}>{selectedBuilding.description}</Text>
+            </>
+          )}
+        </View>
+      </View>
+    </Modal>
+  </View>
+);
+
 
 export default MapScreen;
 
@@ -171,20 +255,32 @@ const styles = StyleSheet.create({
   center: { flex: 1, justifyContent: "center", alignItems: "center" },
   currentMarker: { backgroundColor: "blue", padding: 6, borderRadius: 20, alignItems: "center" },
   destMarker: { backgroundColor: "red", padding: 6, borderRadius: 20, alignItems: "center" },
-  navButtons: {
-    position: "absolute",
-    bottom: 50,
-    width: "90%",
-    alignSelf: "center",
-  },
-  navButton: {
-    backgroundColor: "#007bff",
-    padding: 12,
-    borderRadius: 8,
-    marginBottom: 10,
+  buildingMarker: {
+    width: 40,
+    height: 40,
+    backgroundColor: "rgba(255,255,255,0.8)",
+    borderRadius: 20,
+    justifyContent: "center",
     alignItems: "center",
   },
+  navButtons: { position: "absolute", bottom: 50, width: "90%", alignSelf: "center" },
+  navButton: { backgroundColor: "#007bff", padding: 12, borderRadius: 8, marginBottom: 10, alignItems: "center" },
   navText: { color: "white", fontWeight: "bold" },
+  modalContainer: {
+    backgroundColor: "rgba(59,57,57,0.9)",
+    borderRadius: 16,
+    marginHorizontal: 20,
+    padding: 20,
+    elevation: 5,
+    width: Dimensions.get("window").width - 40,
+    alignSelf: "center",
+    marginTop: 150,
+  },
+  modalContent: { backgroundColor: "rgba(63,61,61,1)", justifyContent: "center", alignItems: "center", padding: 20, borderRadius: 12 },
+  modalTitle: { fontSize: 18, fontWeight: "bold", color: "white" },
+  modalDescription: { fontSize: 14, marginVertical: 10, color: "white" },
+  closeButton: { backgroundColor: "black", position: "absolute", bottom: 1, right: 1, paddingHorizontal: 12, paddingVertical: 6, borderRadius: 8 },
+  closeButtonText: { color: "white", fontSize: 18 },
 });
 
 

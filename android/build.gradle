@@ -1,0 +1,20 @@
+// android/build.gradle (PROJECT LEVEL)
+
+buildscript {
+    ext {
+        kotlinVersion = "2.1.20"
+        gradlePluginVersion = "8.1.2"
+    }
+
+    dependencies {
+        classpath("com.android.tools.build:gradle:$gradlePluginVersion")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
+        classpath("com.facebook.react:react-native-gradle-plugin")
+    }
+}
+
+// ❌ Do NOT put pluginManagement here — must be in settings.gradle
+// ❌ Do NOT put repositories here — AGP 8 forbids it
+
+apply plugin: "expo-root-project"
+apply plugin: "com.facebook.react.rootproject"
