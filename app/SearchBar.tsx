@@ -1,16 +1,18 @@
 import React, { useState } from "react";
 import { FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 
+// place suggestions from google places autocomplete API
 type PlacePrediction = {
   place_id: string;
   description: string;
 };
 
+//destibnation coordinates 
 type Destination = {
   lat: number;
   lng: number;
 };
-
+//props for search bar component
 interface SearchBarProps {
   currentLocation: { coords: { latitude: number; longitude: number } } | null;
   setRouteCoords: (coords: [number, number][]) => void;
@@ -26,7 +28,7 @@ export default function SearchBar({ currentLocation, setRouteCoords, setDestinat
 
   const searchPlaces = async (text: string) => {
     setQuery(text);
-    if (text.length < 2) return setResults([]);
+    if (text.length < 2) return setResults([]); // don't search for short queries
 
     const url = `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${encodeURIComponent(
       text
@@ -35,12 +37,14 @@ export default function SearchBar({ currentLocation, setRouteCoords, setDestinat
     try {
       const res = await fetch(url);
       const data = await res.json();
-      setResults(data.predictions || []);
+
+      setResults(data.predictions || []);// update results with predictions
     } catch (err) {
       console.log(err);
     }
   };
-
+  
+  //select place whren user taps on suggestion
   const selectPlace = async (placeId: string) => {
     const url = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeId}&key=${API_KEY}`;
 
@@ -48,6 +52,7 @@ export default function SearchBar({ currentLocation, setRouteCoords, setDestinat
       const res = await fetch(url);
       const data = await res.json();
 
+      // Extract destination coordinates
       const destination: Destination = {
         lat: data.result.geometry.location.lat,
         lng: data.result.geometry.location.lng,
@@ -70,7 +75,7 @@ export default function SearchBar({ currentLocation, setRouteCoords, setDestinat
 
         const routeRes = await fetch(directionsUrl);
         const routeData = await routeRes.json();
-
+        // Set route coordinates for drawing on map
         if (routeData.routes && routeData.routes.length) {
           setRouteCoords(routeData.routes[0].geometry.coordinates);
         }
@@ -82,12 +87,16 @@ export default function SearchBar({ currentLocation, setRouteCoords, setDestinat
 
   return (
     <View style={styles.container}>
+
+      // searchinput field
       <TextInput
         placeholder="Search destination"
         value={query}
         onChangeText={searchPlaces}
         style={styles.input}
       />
+
+      // suggestions list
       {results.length > 0 && (
         <View style={styles.suggestionsContainer}>
           <FlatList
@@ -145,221 +154,3 @@ const styles = StyleSheet.create({
 
 
 
-// import React, { useState } from 'react';
-// import { FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-
-// export default function SearchBar({ searchedLocation }) {
-//   const [query, setQuery] = useState('');
-//   const [results, setResults] = useState([]);
-
-//   const searchPlaces = async (text) => {
-//     setQuery(text);
-//     if (text.length < 2) return setResults([]);
-
-//     const API_KEY = 'AIzaSyA7QzAfYiQHE8mPE-KcbpWPMDqvM4lt0MY';
-//     const url = `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${encodeURIComponent(
-//       text
-//     )}&key=${API_KEY}`;
-
-//     try {
-//       const res = await fetch(url);
-//       const data = await res.json();
-//       setResults(data.predictions || []);
-//     } catch (err) {
-//       console.log(err);
-//     }
-//   };
-
-//   const selectPlace = async (placeId) => {
-//     const API_KEY = 'AIzaSyA7QzAfYiQHE8mPE-KcbpWPMDqvM4lt0MY';
-//     const url = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeId}&key=${API_KEY}`;
-
-//     try {
-//       const res = await fetch(url);
-//       const data = await res.json();
-//       searchedLocation(data.result.geometry.location);
-//       setQuery(data.result.name);
-//       setResults([]);
-//     } catch (err) {
-//       console.log(err);
-//     }
-//   };
-
-//   return (
-//     <View style={styles.container}>
-//       <TextInput
-//         placeholder="Search"
-//         value={query}
-//         onChangeText={searchPlaces}
-//         style={styles.input}
-//       />
-
-//       {results.length > 0 && (
-//         <View style={styles.suggestionsContainer}>
-//           <FlatList
-//             data={results}
-//             keyExtractor={(item) => item.place_id}
-//             renderItem={({ item }) => (
-//               <TouchableOpacity
-//                 onPress={() => selectPlace(item.place_id)}
-//                 style={styles.suggestionItem}
-//               >
-//                 <Text>{item.description}</Text>
-//               </TouchableOpacity>
-//             )}
-//           />
-//         </View>
-//       )}
-//     </View>
-//   );
-// }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     position: 'absolute', // stay at top
-//     top: 50,              // adjust as needed for your layout / status bar
-//     width: '100%',
-//     zIndex: 1000,         // ensure it’s above other views
-//     alignItems: 'center',
-//   },
-//   input: {
-//     width: '90%',
-//     height: 40,
-//     borderWidth: 1,
-//     borderColor: '#ccc',
-//     borderRadius: 8,
-//     paddingHorizontal: 10,
-//     backgroundColor: 'white',
-//   },
-//   suggestionsContainer: {
-//     width: '90%',
-//     backgroundColor: 'white',
-//     maxHeight: 200,        // optional, scroll if too many results
-//     marginTop: 5,
-//     borderRadius: 8,
-//     shadowColor: '#000',   // for iOS shadow
-//     shadowOffset: { width: 0, height: 2 },
-//     shadowOpacity: 0.2,
-//     shadowRadius: 2,
-//     elevation: 3,          // for Android shadow
-//   },
-//   suggestionItem: {
-//     padding: 10,
-//     borderBottomWidth: 1,
-//     borderColor: '#eee',
-//   },
-// });
-
-
-
-
-
-
-// // import { useJsApiLoader } from '@react-google-maps/api';
-// // import React from 'react';
-
-
-// // function MyComponent() {
-// //   const { isLoaded } = useJsApiLoader({
-// //     id: 'google-map-script',
-// //     googleMapsApiKey: 'AIzaSyA7QzAfYiQHE8mPE-KcbpWPMDqvM4lt0MY', //Api key
-// //   })
-
-// //   console.log(isLoaded)
-
-// //   return (
-// //     <div style={{marginTop: "10%", textAlign: "center"}}>
-// //       <input type="text"
-// //       placeholder='Start typing'
-// //       style={{ 
-// //         boxSizing: 'border-box',
-// //         width: '300px',
-// //         height: '40px',
-// //         padding: '10px',
-// //         fontSize: '16px',
-// //         border: '1px solid black',
-// //         borderRadius: '4px',
-// //         borderRadius: '8px',
-// //         outline: 'none',
-// //         boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)',
-// //         textOverflow: 'ellipses',
-// //         marginTop: '20px'
-      
-// //       }} 
-      
-// //       />
-// //     </div>
-// //   );
-// // }
-
-// // export default React.memo(MyComponent)
-  
-
-// // // import { Ionicons } from '@expo/vector-icons';
-// // // import React from 'react';
-// // // import { View } from 'react-native';
-// // // import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
-
-// // // export default function SearchBar({ searchedLocation }) {
-// // //   return (
-// // //     <View
-// // //       style={{
-// // //         flexDirection: 'row',
-// // //         marginTop: 50,
-// // //         paddingHorizontal: 10,
-// // //         backgroundColor: 'white',
-// // //         borderRadius: 6,
-// // //       }}
-// // //     >
-// // //       <Ionicons
-// // //         name="search"
-// // //         size={24}
-// // //         color="gray"
-// // //         style={{ paddingTop: 10 }}
-// // //       />
-// // //       <GooglePlacesAutocomplete
-// // //         placeholder="Search"
-// // //         fetchDetails={true}
-// // //         onPress={(data, details = null) => {
-// // //             searchedLocation(details.geometry.location)
-// // //         }}
-// // //         query={{
-// // //           key: 'AIzaSyA7QzAfYiQHE8mPE-KcbpWPMDqvM4lt0MY',
-// // //           language: 'en',
-// // //         }}
-// // //         enablePoweredByContainer={false}
-// // //         styles={{ textInput: { flex: 1 } }}
-// // //       />
-// // //     </View>
-// // //   );
-// // // }
-
-
-
-
-
-// // // import React from 'react';
-// // // import { StyleSheet, Text, View } from 'react-native';
-
-// // // export default function SearchBar({ searchedLocation }) {
-// // //   return (
-// // //     <View style={styles.container}>
-// // //       <Text>Search</Text>
-// // //     </View>
-// // //   );
-// // // }
-
-// // // const styles = StyleSheet.create({
-// // //   container: {
-// // //     position: 'absolute', // overlay on top of map
-// // //     top: 50,              // distance from top
-// // //     left: 10,             // distance from left
-// // //     right: 10,            // distance from right
-// // //     height: 50,           // give some height
-// // //     backgroundColor: 'white',
-// // //     borderRadius: 8,
-// // //     paddingHorizontal: 10,
-// // //     justifyContent: 'center',
-// // //     zIndex: 1000          // make sure it’s above the map
-// // //   }
-// // // });

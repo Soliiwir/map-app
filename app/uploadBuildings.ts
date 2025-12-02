@@ -1,6 +1,7 @@
 import { doc, setDoc } from "firebase/firestore";
 import { db } from "./firebaseConfig";
 
+// building data
 const campusBuildings = [
   {
     name: "Scarborough Library",
@@ -17,6 +18,7 @@ const campusBuildings = [
 ];
 
 export const uploadBuildingsToFirebase = async () => {
+  // add each building to Firestore
   try {
     for (let building of campusBuildings) {
       await setDoc(doc(db, "buildings", building.name), building);

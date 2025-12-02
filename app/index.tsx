@@ -4,6 +4,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 import { Platform } from 'react-native';
 
+//import MapboxGL only for non-web platforms
 let MapboxGL;
 if (Platform.OS !== 'web') {
   MapboxGL = require('@rnmapbox/maps').default;
@@ -11,13 +12,15 @@ if (Platform.OS !== 'web') {
 
 
 export default function HomeScreen() {
-  const router = useRouter();
+  const router = useRouter(); // current router instance
 
   return (
+  
     <View style={styles.container}>
+      // openning screen title
       <Text style={styles.title}>Campus App</Text>
 
-      <TouchableOpacity
+      <TouchableOpacity // button to navigate to MapViewScreen
         style={styles.button}
         onPress={() => router.push("/MapViewScreen")}
       >
