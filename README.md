@@ -55,3 +55,11 @@ Installation
    Press i to open in iOS Simulator (Mac only)
    Press a to open in Android Emulator
    Scan the QR code in Expo Go on a real device
+
+
+
+
+https://github.com/user-attachments/assets/dd76184b-8ee2-4eab-aa82-438050b1deb7
+
+
+   
