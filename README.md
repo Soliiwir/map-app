@@ -1,6 +1,6 @@
 # Campus Navigation Application
 
-The Campus Navigation Applicaiton is a mobile app designed to help users navigatie a campus environment efficeintly. Users can search for buildings or facilities, view building details, and get turn-by-turn directions to their chosen destination.
+The Campus Navigation Applicaiton is a mobile app designed to help users navigate a campus environment efficeintly. Users can search for buildings or facilities, view building details, and get turn-by-turn directions to their chosen destination.
 
 Features
 
