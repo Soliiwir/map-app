@@ -1,20 +1,35 @@
-// android/build.gradle (PROJECT LEVEL)
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-    ext {
-        kotlinVersion = "2.1.20"
-        gradlePluginVersion = "8.1.2"
-    }
-
-    dependencies {
-        classpath("com.android.tools.build:gradle:$gradlePluginVersion")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
-        classpath("com.facebook.react:react-native-gradle-plugin")
-    }
+  repositories {
+    google()
+    mavenCentral()
+  }
+  dependencies {
+    classpath('com.android.tools.build:gradle')
+    classpath('com.facebook.react:react-native-gradle-plugin')
+    classpath('org.jetbrains.kotlin:kotlin-gradle-plugin')
+  }
 }
 
-// ❌ Do NOT put pluginManagement here — must be in settings.gradle
-// ❌ Do NOT put repositories here — AGP 8 forbids it
+allprojects {
+  repositories {
+    google()
+    mavenCentral()
+    maven {
+            url "https://api.mapbox.com/downloads/v2/releases/maven"
+            authentication {
+                basic(BasicAuthentication)
+            }
+            credentials {
+                username = "mapbox"
+                password = project.properties['MAPBOX_TOKEN'] ?: ""
+            }
+        }
+        
+    maven { url 'https://www.jitpack.io' }
+  }
+}
 
 apply plugin: "expo-root-project"
 apply plugin: "com.facebook.react.rootproject"

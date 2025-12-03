@@ -1,3 +1,4 @@
+import { GOOGLE_API_KEY, MAPBOX_TOKEN } from '@env';
 import React, { useState } from "react";
 import { FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 
@@ -23,8 +24,12 @@ export default function SearchBar({ currentLocation, setRouteCoords, setDestinat
   const [query, setQuery] = useState<string>("");
   const [results, setResults] = useState<PlacePrediction[]>([]);
 
-  const API_KEY = "AIzaSyA7QzAfYiQHE8mPE-KcbpWPMDqvM4lt0MY";
-  const MAPBOX_TOKEN = "pk.eyJ1Ijoic29saWl3aXIiLCJhIjoiY21pbWlyd3I1MWk1NDNrcHdsMGdmOGJsOSJ9.GswElTdqTx40EhCSmqt0Dg";
+  console.log('Mapbox token:', MAPBOX_TOKEN);
+  console.log('Google API Key:', GOOGLE_API_KEY);
+
+
+  // const API_KEY = GOOGLE_API_KEY;
+  // const MAPBOX_TOKEN = MAPBOX_TOKEN;
 
   const searchPlaces = async (text: string) => {
     setQuery(text);
@@ -32,7 +37,8 @@ export default function SearchBar({ currentLocation, setRouteCoords, setDestinat
 
     const url = `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${encodeURIComponent(
       text
-    )}&key=${API_KEY}`;
+    )}&key=${GOOGLE_API_KEY}`;
+
 
     try {
       const res = await fetch(url);
@@ -46,7 +52,7 @@ export default function SearchBar({ currentLocation, setRouteCoords, setDestinat
   
   //select place whren user taps on suggestion
   const selectPlace = async (placeId: string) => {
-    const url = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeId}&key=${API_KEY}`;
+    const url = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeId}&key=${GOOGLE_API_KEY}`;
 
     try {
       const res = await fetch(url);

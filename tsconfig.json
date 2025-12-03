@@ -9,9 +9,11 @@
     }
   },
   "include": [
-    "**/*.ts",
-    "**/*.tsx",
-    ".expo/types/**/*.ts",
-    "expo-env.d.ts"
-, "app/SearchBar.tsx"  ]
+  "app/**/*.ts",
+  "app/**/*.tsx",
+  "env.d.ts",
+  ".expo/types/**/*.ts",
+  "expo-env.d.ts"
+]
+
 }
