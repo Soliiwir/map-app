@@ -19,7 +19,7 @@ export default function HomeScreen() {
 
       <TouchableOpacity
         style={styles.button}
-        onPress={() => router.push("/MapViewScreen")}
+        onPress={() => router.push("/MapScreen")}
       >
         <Text style={styles.buttonText}>Open Map</Text>
       </TouchableOpacity>

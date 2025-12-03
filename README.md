@@ -1,50 +1,57 @@
-# Welcome to your Expo app 👋
+# Campus Navigation Application
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+The Campus Navigation Applicaiton is a mobile app designed to help users navigate a campus environment efficeintly. Users can search for buildings or facilities, view building details, and get turn-by-turn directions to their chosen destination.
 
-## Get started
+Features
 
-1. Install dependencies
+Search Management
 
-   ```bash
+ * Search campus buildings or facilities using a search bar.
+ * Select a destination from search results to view details or start navigation.
+ * Navigation & Directions
+ * Start in-app navigation to the selected destination.
+ * View estimated travel time (ETA) and distance.
+ * Display routes on the map.
+ * Stop navigation at any time.
+
+Building Information & Location
+ * Tap a building marker to see its name and description.
+ * Dynamic marker showing user's current location.
+
+User Flow
+* Open the app and allow location access.
+* Search for a building.
+* Select a destination and choose:
+      Start in-app navigation or
+      Open in Google Maps
+* View the route and follow navigation.
+* Tap End Navigation to stop.
+* Tap building markers to view details.
+
+Technology Stack
+
+Frontend
+* React Native for cross-platform mobile development.
+* Mapbox SDK for maps, markers, and routing.
+  
+Data Storage
+* Firebase for real-time campus building data storage
+  
+Infrastructure & Deployment
+* Terraform for infrastructure provisioning and management.
+* GitHub Actions for CI/CD workflows, automating testing, integration, and deployment.
+
+Installation
+1. Clone the repository:
+   git clone <repository-url>
+   cd Map-app
+2. Install dependencies:
    npm install
-   ```
-
-2. Start the app
-
-   ```bash
+   or
+   yarn install
+3. Run the app:
    npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+4. Open the app on an emulator or a physical device:
+   Press i to open in iOS Simulator (Mac only)
+   Press a to open in Android Emulator
+   Scan the QR code in Expo Go on a real device

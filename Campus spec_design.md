@@ -18,17 +18,15 @@ This document details the requirements and functionality of a simple mobile-base
 ### 2.3 Building Information and Location
 - **Marker Details:** When a user taps on the building marker, a popup displays building details such as name and description (Gym: This building...).
 - **User Marker:** There is a dynamic marker on the map showing the users current location.
-- ** Visited Location:** Recently visited locations are saved for quick access.
 
 ## 3. user Flow
 1. User opens the application.
 2. User allows the application to access location.
 3. User searches for a specific building.
-4. User selects location and taps "Start."
+4. User selects location and chooses between: Start in-app Navigation or Open in Google Maps."
 5. The app displays routes ETA and travel distance.
 6. User taps "End" to stop navigation.
-7. User can view previously visited locations.
-8. When marker is tapped, the app shows building details.
+7. When marker is tapped, the app shows building details.
 
 ## 4. Technical considerations
 
@@ -39,15 +37,12 @@ This document details the requirements and functionality of a simple mobile-base
 - **Map Integration:** The app uses Mapbox SDK to display the campus map, markers and routes.
 - **Framework:** React Native is used to build a cross-platform mobile application with JavaScript as the programing language.
 
-### Backend
-- **Framework:** Node.js to handle application logic and APIs.
-- **API:** calculate shortest path, ETA and travel distance from users location to destination.
 
 ### Data Storage
-- **Firebase:** It will be used to store real-time data management of campus buildings.
+- **Firebase:** Used for real-time storage and retrieval of campus building data.
 
 ### Infrastructure  as Codem (IaC)
-- **Terraform, Ansible  :** Will use both to provision  and manage infrastructure.
+- **Terraform  :** Used to provision provision  and manage infrastructure.
 
 ### Continuous  Integration/Continuous Delivery (CI/CD)
-- **GitHub Action:** Use it to automate testing, integration and deployment of all changes made.
+- **GitHub Action:** Used to automate testing, bulding and deployment of application.
