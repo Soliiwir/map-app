@@ -22,7 +22,7 @@ User Flow
 * Open the app and allow location access.
 * Search for a building.
 * Select a destination and choose:
-      Start in-app navigation
+      Start in-app navigation or
       Open in Google Maps
 * View the route and follow navigation.
 * Tap End Navigation to stop.
