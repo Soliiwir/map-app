@@ -17,14 +17,13 @@ Search Management
 Building Information & Location
  * Tap a building marker to see its name and description.
  * Dynamic marker showing user's current location.
- * Save recently visited locations for quick access.
 
 User Flow
 * Open the app and allow location access.
 * Search for a building.
 * Select a destination and choose:
-* Start in-app navigation, or
-* Open in Google Maps.
+      Start in-app navigation
+      Open in Google Maps
 * View the route and follow navigation.
 * Tap End Navigation to stop.
 * Tap building markers to view details.
