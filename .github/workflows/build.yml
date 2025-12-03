@@ -1,16 +1,15 @@
 name: Build Application
 
 on:
-  #runs every time new code is pushed to the "main" branch.
-   workflow_run:
-    workflows: ["Test Application"]
-    types:
-      - completed
+  push:
+    branches: 
+      - main
+
 jobs:
   build_android:
     name: Build Android App with Expo EAS
     runs-on: ubuntu-latest
-    needs: test
+
 
     steps:
       # 1. Checkout repository
@@ -23,7 +22,8 @@ jobs:
 
       # 3. Install dependencies
       - name: Install dependencies
-        run: npm install
+        run: npm ci
+
 
       # 4. Install EAS CLI
       - run: npm install -g eas-cli
@@ -32,7 +32,11 @@ jobs:
       - name: Authenticate with Expo
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
-        run: eas whoami --token $EXPO_TOKEN
+          MAPBOX_DOWNLOADS_TOKEN: ${{ secrets.MAPBOX_DOWNLOADS_TOKEN }}
+          GOOGLE_MAPS_API_KEY: ${{ secrets.GOOGLE_MAPS_API_KEY }}
+
+
+        run: eas whoami 
 
 
       # 6. Build Android

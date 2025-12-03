@@ -7,6 +7,7 @@ import { addDoc, collection } from "firebase/firestore";
 import React, { useEffect, useRef, useState } from "react";
 import { Dimensions, Linking, Modal, Platform, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { db } from "./firebaseConfig";
+
 import SearchBar from "./SearchBar";
 import { uploadBuildingsToFirebase } from "./uploadBuildings";
 
