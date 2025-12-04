@@ -49,3 +49,7 @@ terraform.tfstate.backup
 
 # Optional: ignore all exe files (careful)
 # *.exe
+
+.env
+.env.*
+expo-env.d.ts

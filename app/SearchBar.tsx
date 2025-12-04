@@ -1,5 +1,7 @@
+//import { GOOGLE_API_KEY, MAPBOX_TOKEN } from '@env';
 import React, { useState } from "react";
 import { FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { env } from '../env';
 
 //
 type PlacePrediction = {
@@ -25,8 +27,9 @@ export default function SearchBar({ currentLocation, setRouteCoords, setDestinat
   const [query, setQuery] = useState<string>("");
   const [results, setResults] = useState<PlacePrediction[]>([]);
 
-  const API_KEY = "AIzaSyA7QzAfYiQHE8mPE-KcbpWPMDqvM4lt0MY";
-  const MAPBOX_TOKEN = "pk.eyJ1Ijoic29saWl3aXIiLCJhIjoiY21pbWlyd3I1MWk1NDNrcHdsMGdmOGJsOSJ9.GswElTdqTx40EhCSmqt0Dg";
+  const mapboxToken = env.MAPBOX_TOKEN;
+  const googleKey = env.GOOGLE_API_KEY;
+
 
   //search places using Google Places API
   const searchPlaces = async (text: string) => {
@@ -35,7 +38,7 @@ export default function SearchBar({ currentLocation, setRouteCoords, setDestinat
 
     const url = `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${encodeURIComponent(
       text
-    )}&key=${API_KEY}`;
+    )}&key=${googleKey}`;
 
     try {
       const res = await fetch(url);
@@ -47,7 +50,7 @@ export default function SearchBar({ currentLocation, setRouteCoords, setDestinat
   };
 
   const selectPlace = async (placeId: string) => {
-    const url = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeId}&key=${API_KEY}`;
+    const url = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeId}&key=${googleKey}`;
 
     try {
       const res = await fetch(url);
@@ -71,7 +74,7 @@ export default function SearchBar({ currentLocation, setRouteCoords, setDestinat
         ];
         const dest: [number, number] = [destination.lng, destination.lat];
 
-        const directionsUrl = `https://api.mapbox.com/directions/v5/mapbox/driving/${origin[0]},${origin[1]};${dest[0]},${dest[1]}?geometries=geojson&access_token=${MAPBOX_TOKEN}`;
+        const directionsUrl = `https://api.mapbox.com/directions/v5/mapbox/driving/${origin[0]},${origin[1]};${dest[0]},${dest[1]}?geometries=geojson&access_token=${mapboxToken}`;
 
         const routeRes = await fetch(directionsUrl);
         const routeData = await routeRes.json();
@@ -145,8 +148,3 @@ const styles = StyleSheet.create({
     borderColor: "#eee",
   },
 });
-
-
-
-
-

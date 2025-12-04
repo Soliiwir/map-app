@@ -1,4 +1,7 @@
-// declare module '@env' {
-//   export const MAPBOX_TOKEN: string;
-//   export const GOOGLE_API_KEY: string;
-// }
+declare module 'expo-env' {
+  export const env: {
+    MAPBOX_TOKEN: string;
+    GOOGLE_API_KEY: string;
+    [key: string]: string; 
+  };
+}

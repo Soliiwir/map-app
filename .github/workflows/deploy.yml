@@ -1,9 +1,11 @@
 name: Deploy Project
 on:
-  # Run this workflow every time something is pushed to the main branch
-  push:
-    branches:
-      - main
+    # Run this workflow every time something is pushed to the main branch
+
+  workflow_run:
+    workflows: ["Build Application"]
+    types:
+      - completed
 
 jobs:
   deploy:
@@ -41,11 +43,30 @@ jobs:
       #aunthenticate with expo
       - name: Authenticate with Expo
         env:
-          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN}}
         run: eas whoami 
 
 
-      - name: Deploy to Expo Hosting
-        env:
-          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
-        run: eas update --branch production --message "Deployed from GitHub Actions"
+      # - name: Deploy to Expo Hosting
+      #   env:
+      #     EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+      #   run: eas update --branch production --message "Deployed from GitHub Actions"
+
+
+      
+      # ---- DAST: OWASP ZAP Scan ----
+      - name: Run OWASP ZAP Scan
+        run: |
+          docker run -v $(pwd):/zap/wrk/:rw -t owasp/zap2docker-stable \
+          zap-full-scan.py -t http://staging.your-app.com -r zap_report.html
+
+      # Upload ZAP report as artifact
+      - name: Upload ZAP Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: zap-report
+          path: zap_report.html
+
+      # ---- APK Scan: Trivy ----
+      - name: Trivy APK Scan
+        run: trivy fs app/build/outputs/apk/release/app-release.apk

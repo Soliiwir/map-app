@@ -1,5 +1,9 @@
 
 
+import { env } from '../env';
+console.log("MAPBOX_TOKEN", env.MAPBOX_TOKEN);
+console.log("GOOGLE_API_KEY", env.GOOGLE_API_KEY);
+
 import { Fontisto } from '@expo/vector-icons';
 import MapboxGL from "@rnmapbox/maps";
 import * as Location from "expo-location";
@@ -12,7 +16,11 @@ import SearchBar from "./SearchBar";
 import { uploadBuildingsToFirebase } from "./uploadBuildings";
 
 
-MapboxGL.setAccessToken("pk.eyJ1Ijoic29saWl3aXIiLCJhIjoiY21pbWlyd3I1MWk1NDNrcHdsMGdmOGJsOSJ9.GswElTdqTx40EhCSmqt0Dg");
+if (!env.MAPBOX_TOKEN) {
+  console.error("Mapbox token missing!");
+}
+
+MapboxGL.setAccessToken(env.MAPBOX_TOKEN ?? "");
 
 // types for buildings
 type Building = {
@@ -92,7 +100,7 @@ const MapScreen = () => {
 
   // Fetch route from Mapbox Directions API
   const fetchRoute = async (origin: [number, number], dest: [number, number]) => {
-    const url = `https://api.mapbox.com/directions/v5/mapbox/driving/${origin[0]},${origin[1]};${dest[0]},${dest[1]}?geometries=geojson&access_token=pk.eyJ1Ijoic29saWl3aXIiLCJhIjoiY21pbWlyd3I1MWk1NDNrcHdsMGdmOGJsOSJ9.GswElTdqTx40EhCSmqt0Dg`;
+    const url = `https://api.mapbox.com/directions/v5/mapbox/driving/${origin[0]},${origin[1]};${dest[0]},${dest[1]}?geometries=geojson&access_token=${env.MAPBOX_TOKEN}`;
     try {
       const res = await fetch(url); // Fetch directions from Mapbox
       const data = await res.json();

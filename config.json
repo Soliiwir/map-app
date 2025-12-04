@@ -45,9 +45,6 @@
           "backgroundColor": "#ffffff",
           "dark": {
             "backgroundColor": "#000000"
-          },
-          "updates": {
-            "enabled": false
           }
         }
       ],
@@ -61,13 +58,8 @@
       "router": {},
       "eas": {
         "projectId": "29683843-059a-44e0-987d-c05e25fbbaa9"
-      },
-
-       "MAPBOX_TOKEN":"pk.eyJ1Ijoic29saWl3aXIiLCJhIjoiY21pbWlyd3I1MWk1NDNrcHdsMGdmOGJsOSJ9.GswElTdqTx40EhCSmqt0Dg",
-      "GOOGLE_API_KEY":"AIzaSyA7QzAfYiQHE8mPE-KcbpWPMDqvM4lt0MY"
+      }
     }
-    
   }
-  
 }
 

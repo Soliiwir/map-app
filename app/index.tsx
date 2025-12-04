@@ -4,6 +4,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 import { Platform } from 'react-native';
 
+// import MapboxGL for non-web platforms
 let MapboxGL;
 if (Platform.OS !== 'web') {
   MapboxGL = require('@rnmapbox/maps').default;
