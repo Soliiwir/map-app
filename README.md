@@ -57,7 +57,7 @@ Installation
    Scan the QR code in Expo Go on a real device
 
 # More information 
-      https://docs.expo.dev/get-started/set-up-your-environment/
+ https://docs.expo.dev/get-started/set-up-your-environment/
 
 
 
