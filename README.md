@@ -60,6 +60,7 @@ Installation
  https://docs.expo.dev/get-started/set-up-your-environment/
 
 
+# DEMO
 
 
 https://github.com/user-attachments/assets/dd76184b-8ee2-4eab-aa82-438050b1deb7
