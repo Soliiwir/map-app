@@ -15,6 +15,7 @@ import { uploadBuildingsToFirebase } from "./uploadBuildings";
 MapboxGL.setAccessToken("pk.eyJ1Ijoic29saWl3aXIiLCJhIjoiY21pbWlyd3I1MWk1NDNrcHdsMGdmOGJsOSJ9.GswElTdqTx40EhCSmqt0Dg");
 
 // types for buildings
+// remove this line later after git commiting it
 type Building = {
   name: string;
   latitude: number;
