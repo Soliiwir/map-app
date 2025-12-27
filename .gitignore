@@ -48,4 +48,6 @@ terraform.tfstate.backup
 *.tfvars
 
 # Optional: ignore all exe files (careful)
-# *.exe
+.env
+.env.*
+
