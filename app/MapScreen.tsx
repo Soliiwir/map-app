@@ -1,43 +1,36 @@
-
-
 import { Fontisto } from '@expo/vector-icons';
 import MapboxGL from "@rnmapbox/maps";
+import Constants from "expo-constants";
 import * as Location from "expo-location";
 import { addDoc, collection } from "firebase/firestore";
 import React, { useEffect, useRef, useState } from "react";
 import { Dimensions, Linking, Modal, Platform, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { db } from "./firebaseConfig";
-
 import SearchBar from "./SearchBar";
-import { uploadBuildingsToFirebase } from "./uploadBuildings";
+//import { uploadBuildingsToFirebase } from "./uploadBuildings";
 
 
-MapboxGL.setAccessToken("pk.eyJ1Ijoic29saWl3aXIiLCJhIjoiY21pbWlyd3I1MWk1NDNrcHdsMGdmOGJsOSJ9.GswElTdqTx40EhCSmqt0Dg");
+const MAPBOX_TOKEN = Constants.expoConfig?.extra?.MAPBOX_TOKEN;
+// check MAPBOX_TOKEN
+if (!MAPBOX_TOKEN) {
+  throw new Error("Missing Mapbox token");
+}
+
+MapboxGL.setAccessToken(MAPBOX_TOKEN);
 
 // types for buildings
-// remove this line later after git commiting it
 type Building = {
-  name: string;
-  latitude: number;
-  longitude: number;
-  iconName: string;
-  description: string;
+  name: string; latitude: number; longitude: number; iconName: string; description: string;
 };
 
-// list of campus buildings
+// campus buildings
 const campusBuildings: Building[] = [
   {
-    name: "Scarborough Library",
-    latitude: 39.432961,
-    longitude: -77.804428,
-    iconName: "map-marker",
+    name: "Scarborough Library", latitude: 39.432961, longitude: -77.804428, iconName: "map-marker",
     description: "The Scarborough library holds much more than books. With student meeting spaces, computer labs, a printing center, periodicals, digital media and archives, the library is the hub for all things academic. Want to meet with an advisor? Ready to sign up for a one-on-one tutoring session? Head to the first floor where you will find the Academic Support Center, Advising Assistance Center, the TRiO lab and the IT User Support Desk.The library's 24-hour room offers private access to all students 24 hours a day, and is equipped to handle all your late night study session needs with computers, printers, and vending machines. ",
   },
   {
-    name: "Snyder Hall",
-    latitude: 39.432398,
-    longitude: -77.804750,
-    iconName: "map-marker",
+    name: "Snyder Hall", latitude: 39.432398, longitude: -77.80475, iconName: "map-marker",
     description: "Snyder Hall is home to the Department of Computer Science, Mathematics and Engineering. Beyond classroom space it also holds labratories for Geographic Information Systems, Aquatic Sciences, and Robotics.",
   },
 ];
@@ -48,9 +41,9 @@ const MapScreen = () => {
   const [routeCoords, setRouteCoords] = useState<any[]>([]);
   const [showNavButtons, setShowNavButtons] = useState(false);
   const mapCamera = useRef<MapboxGL.Camera>(null);
-  const [firebaseBuildings, setFirebaseBuildings] = useState<Building[]>([]);
+  //const [firebaseBuildings, setFirebaseBuildings] = useState<Building[]>([]);
 
-
+  
   // Modal for building details
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedBuilding, setSelectedBuilding] = useState<Building | null>(null);
@@ -75,7 +68,7 @@ const MapScreen = () => {
   useEffect(() => {
     fetchAndSaveLocation();
     
-    uploadBuildingsToFirebase(); 
+    //uploadBuildingsToFirebase(); 
   }, []);
 
 
@@ -93,7 +86,7 @@ const MapScreen = () => {
 
   // Fetch route from Mapbox Directions API
   const fetchRoute = async (origin: [number, number], dest: [number, number]) => {
-    const url = `https://api.mapbox.com/directions/v5/mapbox/driving/${origin[0]},${origin[1]};${dest[0]},${dest[1]}?geometries=geojson&access_token=pk.eyJ1Ijoic29saWl3aXIiLCJhIjoiY21pbWlyd3I1MWk1NDNrcHdsMGdmOGJsOSJ9.GswElTdqTx40EhCSmqt0Dg`;
+    const url = `https://api.mapbox.com/directions/v5/mapbox/driving/${origin[0]},${origin[1]};${dest[0]},${dest[1]}?geometries=geojson&access_token=${MAPBOX_TOKEN}`;
     try {
       const res = await fetch(url); // Fetch directions from Mapbox
       const data = await res.json();
@@ -225,7 +218,7 @@ const MapScreen = () => {
       {/* Modal */}
       <Modal visible={modalVisible} animationType="none" transparent>
         <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
+          <View style={styles.modalContainer}>
             <TouchableOpacity onPress={() => setModalVisible(false)} style={styles.closeButton}>
               <Text style={styles.closeButtonText}>close</Text>
             </TouchableOpacity>
@@ -270,9 +263,9 @@ const styles = StyleSheet.create({
     elevation: 5,
     width: Dimensions.get("window").width - 40,
     alignSelf: "center",
+    justifyContent: "center",
     marginTop: 150,
   },
-  modalContent: { backgroundColor: "rgba(63,61,61,1)", justifyContent: "center", alignItems: "center", padding: 20, borderRadius: 12 },
   modalTitle: { fontSize: 18, fontWeight: "bold", color: "white" },
   modalDescription: { fontSize: 14, marginVertical: 10, color: "white" },
   closeButton: { backgroundColor: "black", position: "absolute", bottom: 1, right: 1, paddingHorizontal: 12, paddingVertical: 6, borderRadius: 8 },

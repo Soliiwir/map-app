@@ -1,16 +1,11 @@
+import Constants from "expo-constants";
 import React, { useState } from "react";
 import { FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 
-//
-type PlacePrediction = {
-  place_id: string;
-  description: string;
-};
 
-// Define Destination type
-type Destination = {
-  lat: number;
-  lng: number;
+type PlacePrediction = { place_id: string;description: string;
+};
+type Destination = {lat: number; lng: number;
 };
 
 // Define props for SearchBar component
@@ -22,11 +17,16 @@ interface SearchBarProps {
 
 // SearchBar component
 export default function SearchBar({ currentLocation, setRouteCoords, setDestinationCoords }: SearchBarProps) {
+
+  
   const [query, setQuery] = useState<string>("");
   const [results, setResults] = useState<PlacePrediction[]>([]);
+  const GOOGLE_API_KEY = Constants.expoConfig?.extra?.GOOGLE_API_KEY;
+  const MAPBOX_TOKEN = Constants.expoConfig?.extra?.MAPBOX_TOKEN;
 
-  const API_KEY = "AIzaSyA7QzAfYiQHE8mPE-KcbpWPMDqvM4lt0MY";
-  const MAPBOX_TOKEN = "pk.eyJ1Ijoic29saWl3aXIiLCJhIjoiY21pbWlyd3I1MWk1NDNrcHdsMGdmOGJsOSJ9.GswElTdqTx40EhCSmqt0Dg";
+   if (!GOOGLE_API_KEY || !MAPBOX_TOKEN) {
+    throw new Error("API keys missing");
+  }
 
   //search places using Google Places API
   const searchPlaces = async (text: string) => {
@@ -35,7 +35,7 @@ export default function SearchBar({ currentLocation, setRouteCoords, setDestinat
 
     const url = `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${encodeURIComponent(
       text
-    )}&key=${API_KEY}`;
+    )}&key=${GOOGLE_API_KEY}`;
 
     try {
       const res = await fetch(url);
@@ -47,7 +47,7 @@ export default function SearchBar({ currentLocation, setRouteCoords, setDestinat
   };
 
   const selectPlace = async (placeId: string) => {
-    const url = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeId}&key=${API_KEY}`;
+    const url = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeId}&key=${GOOGLE_API_KEY}`;
 
     try {
       const res = await fetch(url);
