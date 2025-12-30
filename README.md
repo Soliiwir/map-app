@@ -22,8 +22,8 @@ User Flow
 * Open the app and allow location access.
 * Search for a building.
 * Select a destination and choose:
-      Start in-app navigation or
-      Open in Google Maps
+      * Start in-app navigation or
+      * Open in Google Maps
 * View the route and follow navigation.
 * Tap End Navigation to stop.
 * Tap building markers to view details.
@@ -43,18 +43,16 @@ Infrastructure & Deployment
 
 Installation
 1. Clone the repository:
-   git clone <repository-url>
-   cd Map-app
+   * git clone <repository-url>
+   * cd Map-app
 2. Install dependencies:
-   npm install
-   or
-   yarn install
+   * npm install or yarn install
 3. Run the app:
-   npx expo start
+   * npx expo start
 4. Open the app on an emulator or a physical device:
    * Press i to open in iOS Simulator (Mac only)
-   Press a to open in Android Emulator
-   Scan the QR code in Expo Go on a real device
+   * Press a to open in Android Emulator
+   * Scan the QR code in Expo Go on a real device
 
 # More information 
  https://docs.expo.dev/get-started/set-up-your-environment/
