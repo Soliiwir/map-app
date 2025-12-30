@@ -24,6 +24,7 @@ jobs:
         #ensure git is configured
       - name: Configure Git
         run: |
+          git config --global --add safe.directory $GITHUB_WORKSPACE
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
 
@@ -48,4 +49,4 @@ jobs:
       - name: Deploy to Expo Hosting
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
-        run: eas update --branch production --message "Deployed from GitHub Actions"
+        run: eas update --branch production --message "Deployed from GitHub Actions" --non-interactive
