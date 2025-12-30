@@ -52,7 +52,7 @@ Installation
 3. Run the app:
    npx expo start
 4. Open the app on an emulator or a physical device:
-   Press i to open in iOS Simulator (Mac only)
+   * Press i to open in iOS Simulator (Mac only)
    Press a to open in Android Emulator
    Scan the QR code in Expo Go on a real device
 
