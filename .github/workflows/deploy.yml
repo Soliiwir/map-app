@@ -2,7 +2,7 @@ name: Deploy Project
 on:
   # Run this workflow every time something is pushed to the main branch
   workflow_run:
-    workflows: ["Test Application"]   # MUST match test workflow name exactly
+    workflows: ["Build Application"]   # MUST match test workflow name exactly
     types:
       - completed
 

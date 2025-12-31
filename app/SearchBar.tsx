@@ -1,4 +1,3 @@
-import Constants from "expo-constants";
 import React, { useState } from "react";
 import { FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 
@@ -21,8 +20,8 @@ export default function SearchBar({ currentLocation, setRouteCoords, setDestinat
   
   const [query, setQuery] = useState<string>("");
   const [results, setResults] = useState<PlacePrediction[]>([]);
-  const GOOGLE_API_KEY = Constants.expoConfig?.extra?.GOOGLE_API_KEY;
-  const MAPBOX_TOKEN = Constants.expoConfig?.extra?.MAPBOX_TOKEN;
+  const GOOGLE_API_KEY = process.env.EXPO_PUBLIC_GOOGLE_API_KEY;
+  const MAPBOX_TOKEN = process.env.EXPO_PUBLIC_MAPBOX_TOKEN;
 
    if (!GOOGLE_API_KEY || !MAPBOX_TOKEN) {
     throw new Error("API keys missing");

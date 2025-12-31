@@ -45,4 +45,4 @@ This document details the requirements and functionality of a simple mobile-base
 - **Terraform  :** Used to provision provision  and manage infrastructure.
 
 ### Continuous  Integration/Continuous Delivery (CI/CD)
-- **GitHub Action:** Used to automate testing, bulding and deployment of application.
+- **GitHub Action:** Used to automate testing, bulding and deploying application.

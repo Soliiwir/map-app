@@ -60,7 +60,7 @@ export default {
       reactCompiler: true,
     },
 
-    /** ✅ REQUIRED FOR EAS UPDATE (BARE WORKFLOW) */
+ 
     runtimeVersion: "1.0.0",
 
     updates: {

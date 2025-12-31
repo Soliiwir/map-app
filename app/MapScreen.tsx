@@ -7,7 +7,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Dimensions, Linking, Modal, Platform, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { db } from "./firebaseConfig";
 import SearchBar from "./SearchBar";
-//import { uploadBuildingsToFirebase } from "./uploadBuildings";
+
 
 
 const MAPBOX_TOKEN = Constants.expoConfig?.extra?.MAPBOX_TOKEN;
@@ -41,7 +41,6 @@ const MapScreen = () => {
   const [routeCoords, setRouteCoords] = useState<any[]>([]);
   const [showNavButtons, setShowNavButtons] = useState(false);
   const mapCamera = useRef<MapboxGL.Camera>(null);
-  //const [firebaseBuildings, setFirebaseBuildings] = useState<Building[]>([]);
 
   
   // Modal for building details
@@ -68,7 +67,6 @@ const MapScreen = () => {
   useEffect(() => {
     fetchAndSaveLocation();
     
-    //uploadBuildingsToFirebase(); 
   }, []);
 
 

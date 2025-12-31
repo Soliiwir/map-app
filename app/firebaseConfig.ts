@@ -1,5 +1,4 @@
 // Import the functions you need from the SDKs you need
-import Constants from "expo-constants";
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
@@ -10,8 +9,7 @@ import { getFirestore } from "firebase/firestore";
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 
-const GOOGLE_API_KEY = Constants.expoConfig?.extra?.GOOGLE_API_KEY;
-
+const GOOGLE_API_KEY = process.env.EXPO_PUBLIC_GOOGLE_API_KEY;
 if (!GOOGLE_API_KEY) {
   throw new Error("Missing Firebase API key");
 }

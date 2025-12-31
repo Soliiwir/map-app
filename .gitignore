@@ -28,8 +28,6 @@ yarn-error.*
 .DS_Store
 *.pem
 
-# Local env files
-.env*.local
 
 # TypeScript build info
 *.tsbuildinfo
@@ -47,7 +45,7 @@ terraform.tfstate
 terraform.tfstate.backup
 *.tfvars
 
-# Optional: ignore all exe files (careful)
+# Environment variables
 .env
 .env.*
-
+!.env.example
