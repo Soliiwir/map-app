@@ -11,8 +11,6 @@
   "include": [
     "**/*.ts",
     "**/*.tsx",
-    "app/SearchBar.tsx",
-    ".expo/types/**/*.ts",
-    "expo-env.d.ts"
+    "app/SearchBar.tsx"
   ]
 }
